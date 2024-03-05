@@ -1,6 +1,6 @@
 {
   "name": "@skylord123/event-listener",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Emit, listen for, and wait on events using nodes in Node-RED",
   "repository": {
     "type": "git",
