@@ -4,6 +4,7 @@ module.exports = function(RED) {
         let node = this;
         this.eventIdType = n.eventIdType || null;
         this.eventIdValue = n.eventIdValue || null;
+        this.sendType = n.sendType || "msg";
         this.payloadType = n.payloadType || null;
         this.payloadValue = n.payloadValue || null;
         this.returns = n.returns || null;
@@ -35,8 +36,8 @@ module.exports = function(RED) {
         }
 
         node.on("input", async function(msg) {
-            let eventId = getToValue(msg, node.eventIdType, node.eventIdValue),
-                eventPayload = getToValue(msg, node.payloadType, node.payloadValue);
+            let eventId = getToValue(msg, node.eventIdType, node.eventIdValue);
+            let eventPayload = node.sendType === "property" ? getToValue(msg, node.payloadType, node.payloadValue) : msg;
 
             node.eventListenerNamespace.emit(eventId, eventPayload);
             node.send(msg);
