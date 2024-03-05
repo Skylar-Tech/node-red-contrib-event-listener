@@ -1,0 +1,223 @@
+[
+  {
+    "id": "86f34b0d23643f22",
+    "type": "event-listener-emit",
+    "z": "5502eb7468869b22",
+    "name": "",
+    "eventListenerNamespace": "dcee5738b005eccf",
+    "eventIdType": "msg",
+    "eventIdValue": "topic",
+    "sendType": "msg",
+    "payloadType": "msg",
+    "payloadValue": "payload",
+    "x": 390,
+    "y": 500,
+    "wires": [
+      [
+        "fef2fd3773254aed"
+      ]
+    ]
+  },
+  {
+    "id": "18583b5795737396",
+    "type": "event-listener-on",
+    "z": "5502eb7468869b22",
+    "name": null,
+    "eventListenerNamespace": "dcee5738b005eccf",
+    "eventId": "example",
+    "x": 170,
+    "y": 620,
+    "wires": [
+      [
+        "5b221e5a72b5b9dc"
+      ]
+    ]
+  },
+  {
+    "id": "a5f82f0cef88a126",
+    "type": "inject",
+    "z": "5502eb7468869b22",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "example",
+    "payload": "test",
+    "payloadType": "str",
+    "x": 150,
+    "y": 500,
+    "wires": [
+      [
+        "86f34b0d23643f22"
+      ]
+    ]
+  },
+  {
+    "id": "fef2fd3773254aed",
+    "type": "debug",
+    "z": "5502eb7468869b22",
+    "name": "event emitted debug",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 660,
+    "y": 500,
+    "wires": []
+  },
+  {
+    "id": "5b221e5a72b5b9dc",
+    "type": "debug",
+    "z": "5502eb7468869b22",
+    "name": "event received debug",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 400,
+    "y": 620,
+    "wires": []
+  },
+  {
+    "id": "4c9f264dfb26b0d1",
+    "type": "event-listener-wait-for",
+    "z": "5502eb7468869b22",
+    "name": "",
+    "eventListenerNamespace": "dcee5738b005eccf",
+    "eventIdType": "msg",
+    "eventIdValue": "topic",
+    "timeoutHandling": "single",
+    "timeoutType": "num",
+    "timeoutValue": "5",
+    "timeoutUnit": "s",
+    "eventHandling": "set-property",
+    "eventHandlingPropType": "msg",
+    "eventHandlingPropValue": "payload",
+    "x": 380,
+    "y": 360,
+    "wires": [
+      [
+        "95b24e483edbccee"
+      ],
+      [
+        "0e73d1033114b1c3"
+      ]
+    ]
+  },
+  {
+    "id": "95b24e483edbccee",
+    "type": "debug",
+    "z": "5502eb7468869b22",
+    "name": "Event debug",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 610,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "a929792f3da38293",
+    "type": "inject",
+    "z": "5502eb7468869b22",
+    "name": "",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "example",
+    "payload": "test2",
+    "payloadType": "str",
+    "x": 150,
+    "y": 360,
+    "wires": [
+      [
+        "4c9f264dfb26b0d1"
+      ]
+    ]
+  },
+  {
+    "id": "0e73d1033114b1c3",
+    "type": "debug",
+    "z": "5502eb7468869b22",
+    "name": "Timeout debug",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 620,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "d4131d3a32389a8a",
+    "type": "comment",
+    "z": "5502eb7468869b22",
+    "name": "Emit testing.example event",
+    "info": "",
+    "x": 170,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "cfa7c5940bb6813a",
+    "type": "comment",
+    "z": "5502eb7468869b22",
+    "name": "Wait for testing.example event - timeout after 5 seconds",
+    "info": "Show how a flow can be paused to wait for an event.\n\nYou can also inject multiple times and when the \nevent arrives all of them will fire if they \nhaven't timed out.",
+    "x": 260,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "5b4bbc93d859fb47",
+    "type": "comment",
+    "z": "5502eb7468869b22",
+    "name": "Receive testing.example event",
+    "info": "",
+    "x": 190,
+    "y": 580,
+    "wires": []
+  },
+  {
+    "id": "dcee5738b005eccf",
+    "type": "event-listener-namespace",
+    "name": "testing"
+  }
+]

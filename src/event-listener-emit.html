@@ -1,0 +1,101 @@
+<script type="text/javascript">
+    RED.nodes.registerType('event-listener-emit',{
+        category: 'event-listener',
+        icon: "font-awesome/fa-paper-plane",
+        align: "right", // This specifies the icon alignment
+        color: '#B4A7D6',
+        outputLabels: ["success", "error"],
+        inputs: 1,
+        outputs: 1,
+        defaults: {
+            name: { value: null },
+            eventListenerNamespace: { type: "event-listener-namespace" },
+            eventIdType: { value: "msg" },
+            eventIdValue: { value: "topic" },
+            sendType: { value: "msg" },
+            payloadType: { value: "msg" },
+            payloadValue: { value: "payload" }
+        },
+        paletteLabel: 'emit event',
+        label: function() {
+            if(this.name) {
+                return this.name;
+            }
+
+            if(this.eventIdType === "string") {
+                return `emit event: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}${this.eventIdValue}`;
+            } else if(this.eventIdType === "msg" || this.eventIdType === "flow" || this.eventIdType === "global") {
+                return `emit event: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}{${this.eventIdType}.${this.eventIdValue}}`;
+            }
+            return "wait for event";
+        },
+        oneditprepare: function() {
+            $("#node-input-eventId").typedInput({
+                types:['msg','flow','global','bool'],
+            })
+                .typedInput('value', this.eventIdValue || "topic")
+                .typedInput('type', this.eventIdType || "msg");
+            $("#node-input-sendType").typedInput({
+                type:"fruit", types:[{
+                    value: "msg",
+                    options: [
+                        { value: "msg", label: "Send full msg object"},
+                        { value: "property", label: "Send property"}
+                    ]
+                }]}
+            );
+            $("#node-input-payload").typedInput({
+                types:['msg','flow','global','bool'],
+            })
+                .typedInput('value', this.payloadValue || "topic")
+                .typedInput('type', this.payloadType || "msg");
+
+            $("#node-input-sendType").on('change', function(){
+                let val = $(this).val();
+                if(val !== "property") {
+                    $("#node-input-payload-container").hide();
+                } else {
+                    $("#node-input-payload-container").show();
+                }
+            }).change();
+        },
+        oneditsave: function() {
+            this.eventIdType = $("#node-input-eventId").typedInput('type');
+            this.eventIdValue = $("#node-input-eventId").typedInput('value');
+            this.payloadType = $("#node-input-payload").typedInput('type');
+            this.payloadValue = $("#node-input-payload").typedInput('value');
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="event-listener-emit">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventListenerNamespace"><i class="fa fa-user"></i> Namespace</label>
+        <input type="text" id="node-input-eventListenerNamespace">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventId"><i class="fa fa-commenting-o"></i> Event Id</label>
+        <input type="text" id="node-input-eventId">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-sendType"><i class="fa fa-tag"></i> Event data</label>
+        <input type="text" id="node-input-sendType">
+    </div>
+
+    <div class="form-row" id="node-input-payload-container">
+        <label for="node-input-eventId"><i class="fa fa-commenting-o"></i> From Property</label>
+        <input type="text" id="node-input-payload">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="event-listener-emit">
+    <h3>Details</h3>
+    <p>Emit an event with configuration to send the full msg object or just a single property.</p>
+</script>

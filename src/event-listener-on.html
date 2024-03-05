@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    RED.nodes.registerType('event-listener-on',{
+        category: 'event-listener',
+        icon: "font-awesome/fa-arrow-right",
+        color: '#B4A7D6',
+        outputLabels: ["success", "error"],
+        inputs: 0,
+        outputs: 1,
+        defaults: {
+            name: { value: null },
+            eventListenerNamespace: { type: "event-listener-namespace" },
+            eventId: { value: "example" },
+        },
+        paletteLabel: 'on event',
+        label: function() {
+            if(this.name) {
+                return this.name;
+            }
+
+            if(this.eventId && this.eventListenerNamespace) {
+                return `on event: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}${this.eventId}`;
+            }
+
+            return "on event";
+        },
+        oneditprepare: function() {
+        },
+        oneditsave: function() {
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="event-listener-on">
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-eventListenerNamespace"><i class="fa fa-user"></i> Namespace</label>
+        <input type="text" id="node-input-eventListenerNamespace">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventId"><i class="fa fa-commenting-o"></i> Event Id</label>
+        <input type="text" id="node-input-eventId">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="event-listener-on">
+    <h3>Details</h3>
+    <p>Outputs when the configured event emits</p>
+</script>

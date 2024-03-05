@@ -1,0 +1,206 @@
+<script type="text/javascript">
+    RED.nodes.registerType('event-listener-wait-for',{
+        category: 'event-listener',
+        icon: "font-awesome/fa-clock-o",
+        color: '#DAA520',
+        outputLabels: ["success", "error"],
+        inputs: 1,
+        outputs: 2,
+        defaults: {
+            name: { value: null },
+            eventListenerNamespace: { type: "event-listener-namespace" },
+            eventIdType: { value: "msg" },
+            eventIdValue: { value: "topic" },
+            // multipleEvents: { value: "allowed" },
+            timeoutHandling: { value: "single" },
+            timeoutType: { value: "num" },
+            timeoutValue: { value: "60000" },
+            timeoutUnit: { value: "ms" },
+            eventHandling: { value: "set-property" },
+            eventHandlingPropType: { value: "msg", validate: function(){
+                    return $("#node-input-eventHandling").val() === "set-property"
+                        ? $("#node-input-eventHandlingProp").typedInput('type').length
+                        : true;
+                } },
+            eventHandlingPropValue: { value: "payload", validate: function(){
+                    return $("#node-input-eventHandling").val() === "set-property"
+                        ? $("#node-input-eventHandlingProp").typedInput('value').length
+                        : true;
+                }
+            }
+        },
+        paletteLabel: 'wait for event',
+        label: function() {
+            if(this.name) {
+                return this.name;
+            }
+
+            if(this.eventIdType === "string") {
+                return `wait for: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}${this.eventIdValue}`;
+            } else if(this.eventIdType === "msg" || this.eventIdType === "flow" || this.eventIdType === "global") {
+                return `wait for: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}{${this.eventIdType}.${this.eventIdValue}}`;
+            }
+            return "wait for event";
+        },
+        oneditprepare: function() {
+            $("#node-input-eventId").typedInput({
+                types:['msg','flow','global','string'],
+            })
+                .typedInput('value', this.eventIdValue || "topic")
+                .typedInput('type', this.eventIdType || "msg");
+            // $("#node-input-multipleEvents").typedInput({
+            //     type:"multiple-events", types:[{
+            //         value: "single",
+            //         options: [
+            //             { value: "allowed", label: "Allow multiple concurrent listeners to register" },
+            //             { value: "single", label: "Single event: ignore until timeout" },
+            //             { value: "single-replace", label: "Single event: replace existing" },
+            //             { value: "unique-replace", label: "Only one event listener per event ID (replace)" },
+            //             { value: "unique-keep", label: "Only one event listener per event ID (keep)" },
+            //         ]
+            //     }]}
+            // );
+            $("#node-input-timeoutHandling").typedInput({
+                type:"timeout-handling", types:[{
+                    value: "single",
+                    options: [
+                        { value: "single", label: "Wait for single event or timeout" },
+                        { value: "multiple", label: "Send all events until timeout" },
+                    ]
+                }]}
+            );
+            $("#node-input-timeout").typedInput({
+                types:['msg','flow','global','num'],
+            })
+                .typedInput('value', this.timeoutValue || "60000")
+                .typedInput('type', this.timeoutType || "num");
+            $("#node-input-eventHandling").typedInput({
+                type:"fruit", types:[{
+                    value: "set-property",
+                    options: [
+                        { value: "set-property", label: "Set event data to msg property"},
+                        { value: "merge-original", label: "Merge event into original msg"},
+                        { value: "merge-event", label: "Merge original msg into event"},
+                        { value: "ignore", label: "Ignore event data"}
+                    ]
+                }]}
+            );
+            $("#node-input-timeoutUnit").typedInput({
+                type:"timeout-unit", types:[{
+                    value: "ms",
+                    options: [
+                        { value: "ms", label: "Milliseconds" },
+                        { value: "s", label: "Seconds" },
+                        { value: "m", label: "Minutes" },
+                        { value: "h", label: "Hours" },
+                        { value: "d", label: "Days" },
+                    ]
+                }]}
+            );
+
+            // <option value="milliseconds">Milliseconds</option>
+            // <option value="seconds">Seconds</option>
+            // <option value="minutes">Minutes</option>
+            // <option value="hours">Hours</option>
+            // <option value="days">Days</option>
+
+            $("#node-input-eventHandlingProp").typedInput({
+                types:['msg','flow','global'],
+            })
+                .typedInput('value', this.eventHandlingPropValue || "payload")
+                .typedInput('type', this.eventHandlingPropType || "msg");
+
+            $("#node-input-eventHandling").on('change', function(){
+                let val = $(this).val();
+                if(val === "merge-event" || val === "merge-original") {
+                    $("#node-input-eventHandling-obj-msg").show();
+                } else {
+                    $("#node-input-eventHandling-obj-msg").hide();
+                }
+
+                if(val !== "set-property") {
+                    $("#node-input-eventHandlingProp-container").hide();
+                } else {
+                    $("#node-input-eventHandlingProp-container").show();
+                }
+            }).change();
+
+            $("#node-input-timeoutHandling").on('change', function(){
+                let val = $(this).val();
+                if(val === "single") {
+                    $("#node-input-timeoutHandling-msg").html("In this mode if an event with the matching event ID comes in before timeout we return to the first output otherwise if timeout occurs we return to the second output. You will only get one message from either the first or second output.");
+                } else {
+                    $("#node-input-timeoutHandling-msg").html("In this mode we return all events matching this event ID on the first output until timeout then we send a message to the second output");
+                }
+            }).change();
+        },
+        oneditsave: function() {
+            this.eventIdType = $("#node-input-eventId").typedInput('type');
+            this.eventIdValue = $("#node-input-eventId").typedInput('value');
+            this.timeoutType = $("#node-input-timeout").typedInput('type');
+            this.timeoutValue = $("#node-input-timeout").typedInput('value');
+            this.eventHandlingPropType = $("#node-input-eventHandlingProp").typedInput('type');
+            this.eventHandlingPropValue = $("#node-input-eventHandlingProp").typedInput('value');
+        },
+    });
+</script>
+
+<script type="text/html" data-template-name="event-listener-wait-for">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventListenerNamespace"><i class="fa fa-user"></i> Namespace</label>
+        <input type="text" id="node-input-eventListenerNamespace">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventId"><i class="fa fa-commenting-o"></i> Event Id</label>
+        <input type="text" id="node-input-eventId">
+    </div>
+
+<!--    <div class="form-row">-->
+<!--        <label for="node-input-multipleEvents"><i class="fa fa-tag"></i> Multiple Events</label>-->
+<!--        <input type="text" id="node-input-multipleEvents">-->
+<!--        <div class="form-tips" id="node-input-multipleEvents-msg" style="margin-bottom: 12px;margin-top:12px;"></div>-->
+<!--    </div>-->
+
+    <div class="form-row">
+        <label for="node-input-timeoutHandling"><i class="fa fa-tag"></i> Timeout Handling</label>
+        <input type="text" id="node-input-timeoutHandling">
+        <div class="form-tips" id="node-input-timeoutHandling-msg" style="margin-bottom: 12px;margin-top:12px;"></div>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-commenting-o"></i> Timeout</label>
+        <input type="text" id="node-input-timeout">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-timeoutUnit"></label>
+        <input type="text" id="node-input-timeoutUnit">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-eventHandling"><i class="fa fa-tag"></i> Event Data</label>
+        <input type="text" id="node-input-eventHandling">
+        <div class="form-tips" id="node-input-eventHandling-obj-msg" style="margin-bottom: 12px;margin-top:12px;display:none;">
+            In this mode the merge will only happen if the event data is an object. If it is not an object the original msg object is returned.
+        </div>
+    </div>
+
+    <div class="form-row" id="node-input-eventHandlingProp-container">
+        <label for="node-input-eventHandlingProp"><i class="fa fa-tag"></i> Data Property</label>
+        <input type="text" id="node-input-eventHandlingProp">
+        <div class="form-tips" style="margin-bottom: 12px;margin-top:12px">
+            This defines which property you want to set the event data to
+        </div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="event-listener-wait-for">
+    <h3>Details</h3>
+    <p>Wait for event(s) before continuing the flow.</p>
+</script>
