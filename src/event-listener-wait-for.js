@@ -1,4 +1,4 @@
-const nanoid = require('nanoid');
+const { randomUUID } = require('crypto');
 
 class TimeoutManager {
     constructor() {
@@ -7,7 +7,7 @@ class TimeoutManager {
 
     // Adds a new timeout and returns its unique ID
     setTimeout(callback, delay) {
-        const id = nanoid();
+        const id = randomUUID();
         const timeout = setTimeout(() => {
             callback();
             this.timeouts.delete(id); // Automatically delete the timeout once it completes

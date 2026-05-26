@@ -1,6 +1,6 @@
 {
   "name": "@skylord123/event-listener",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Emit, listen for, and wait on events using nodes in Node-RED",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "on"
   ],
   "node-red": {
+    "version": ">=1.0.0",
     "nodes": {
       "event-listener-namespace": "src/event-listener-namespace.js",
       "event-listener-emit": "src/event-listener-emit.js",
@@ -28,7 +29,7 @@
       "event-listener-wait-for": "src/event-listener-wait-for.js"
     }
   },
-  "dependencies": {
-    "nanoid": "^2.1.11"
+  "engines": {
+    "node": ">=18"
   }
 }
