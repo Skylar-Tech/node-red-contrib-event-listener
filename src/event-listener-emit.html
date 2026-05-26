@@ -22,16 +22,16 @@
                 return this.name;
             }
 
-            if(this.eventIdType === "string") {
+            if(this.eventIdType === "str") {
                 return `emit event: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}${this.eventIdValue}`;
             } else if(this.eventIdType === "msg" || this.eventIdType === "flow" || this.eventIdType === "global") {
                 return `emit event: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}{${this.eventIdType}.${this.eventIdValue}}`;
             }
-            return "wait for event";
+            return "emit event";
         },
         oneditprepare: function() {
             $("#node-input-eventId").typedInput({
-                types:['msg','flow','global','bool'],
+                types:['msg','flow','global','str'],
             })
                 .typedInput('value', this.eventIdValue || "topic")
                 .typedInput('type', this.eventIdType || "msg");
@@ -45,9 +45,9 @@
                 }]}
             );
             $("#node-input-payload").typedInput({
-                types:['msg','flow','global','bool'],
+                types:['msg','flow','global','str','num','bool'],
             })
-                .typedInput('value', this.payloadValue || "topic")
+                .typedInput('value', this.payloadValue || "payload")
                 .typedInput('type', this.payloadType || "msg");
 
             $("#node-input-sendType").on('change', function(){

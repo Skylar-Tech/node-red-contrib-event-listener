@@ -32,7 +32,7 @@ module.exports = function(RED) {
 
         node.eventListenerNamespace.on(node.eventId, function(payload){
             if(typeof payload === "object" && !Array.isArray(payload)) {
-                node.send(payload);
+                node.send(Object.assign({}, payload));
             } else {
                 node.send({
                     topic: node.eventId,

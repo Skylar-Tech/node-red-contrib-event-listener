@@ -35,7 +35,7 @@
                 return this.name;
             }
 
-            if(this.eventIdType === "string") {
+            if(this.eventIdType === "str") {
                 return `wait for: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}${this.eventIdValue}`;
             } else if(this.eventIdType === "msg" || this.eventIdType === "flow" || this.eventIdType === "global") {
                 return `wait for: ${this.eventListenerNamespace ? `${RED.nodes.node(this.eventListenerNamespace).name}.` : ''}{${this.eventIdType}.${this.eventIdValue}}`;

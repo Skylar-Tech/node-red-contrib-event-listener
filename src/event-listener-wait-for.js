@@ -79,6 +79,10 @@ module.exports = function(RED) {
         }
 
         function setToValue(msg, type, property, valueToSet) {
+            // if value is object lets copy it
+            valueToSet = typeof valueToSet === "object" && !Array.isArray(valueToSet)
+                ? Object.assign({}, valueToSet)
+                : valueToSet;
             if (type === "msg") {
                 // Set the property on the msg object
                 RED.util.setMessageProperty(msg, property, valueToSet, true);
