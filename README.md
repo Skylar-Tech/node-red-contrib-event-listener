@@ -11,7 +11,7 @@ I spend a lot of time making these custom modules, if you use them consider dona
 
 
 ### Usage Example
-![img_3.png](examples/img_3.png)
+![img_3.png](https://raw.githubusercontent.com/Skylar-Tech/node-red-contrib-event-listener/master/examples/img_3.png)
 
 Above is a quick flow that demonstrates one of the use cases of these nodes.
 
@@ -21,7 +21,7 @@ We turn the debug nodes for the second and third flow off just so we only see me
 
 **Note:** If you press the inject button on the first flow 4 times then press the emit event button you will get 4 `msg` outputs to the first node. Currently we do not support changing this but if you need this feel free to open an issue to get it added.
 
-To use this example import the JSON for this flow found [here](examples/example.json).
+To use this example import the JSON for this flow found [here](https://github.com/Skylar-Tech/node-red-contrib-event-listener/blob/master/examples/example.json).
 
 ### Node Information
 
@@ -29,17 +29,17 @@ To use this example import the JSON for this flow found [here](examples/example.
 This is the configuration node that every node uses. Events are grouped by a namespace to allow for organization and separation. 
 
 ###### emit event node
-![img.png](examples/img.png)
+![img.png](https://raw.githubusercontent.com/Skylar-Tech/node-red-contrib-event-listener/master/examples/img.png)
 
 This node will emit (send) an event. You can choose to send the full `msg` object as the event payload (default option) or just a specific property.
 
 ###### on event node
-![img_1.png](examples/img_1.png)
+![img_1.png](https://raw.githubusercontent.com/Skylar-Tech/node-red-contrib-event-listener/master/examples/img_1.png)
 
 This node listens for a specified `eventId` and outputs all events as `msg` objects. If the event data is not an object it will be set to a new `msg` object's `payload` and sent.
 
 ###### wait for node
-![img_2.png](examples/img_2.png)
+![img_2.png](https://raw.githubusercontent.com/Skylar-Tech/node-red-contrib-event-listener/master/examples/img_2.png)
 
 Configuration `Timeout Handling` options:
 - By default, when this node receives a `msg` it starts listening for an event matching the configured `eventId`. Once that event arrives it will stop listening and output the event details to the first output. If we receive no event by `timeout` we instead send the original message to the second output.
